@@ -34,12 +34,12 @@ export const MainNavigationData: MainNavigationDataType[] = [
         id: 4,
         title: '채팅',
         icon: Chat,
-        url: '/',
+        url: '/chat',
     },
     {
         id: 5,
-        title: '마이페이지',
+        title: '로그인',
         icon: Mypage,
-        url: '/mypage',
+        url: '/',
     },
 ]
