@@ -16,7 +16,6 @@ export default function LoginForm({ loginError, id, pw }: { loginError: boolean;
         if (inputId === '' || inputPassword === '') {
             setError(true)
             // alert('아이디와 비밀번호를 입력해주세요')
-
             return
         }
         try {
@@ -35,7 +34,7 @@ export default function LoginForm({ loginError, id, pw }: { loginError: boolean;
                 // console.log('Success:', data.data)
                 localStorage.setItem('accessToken', data.data.accessToken)
                 // console.log('Success:', localStorage.getItem('accessToken'))
-                // router.push('/chat')
+                router.push('/chat')
             } else {
                 setError(true)
             }
