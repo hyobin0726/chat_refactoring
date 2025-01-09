@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import RightArrow from '@/components/images/RightArrow'
 import DeleteCircle from '@/components/images/DeleteCircle'
@@ -8,10 +8,40 @@ import DeleteCircle from '@/components/images/DeleteCircle'
 export default function LoginForm({ loginError, id, pw }: { loginError: boolean; id: string; pw: string }) {
     const [inputId, setInputId] = useState<string>(id)
     const [inputPassword, setInputPassword] = useState<string>(pw)
+    const [error, setError] = useState<boolean>(loginError)
     const router = useRouter()
-    const handleLogin = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        router.push('/chat')
+
+        if (inputId === '' || inputPassword === '') {
+            setError(true)
+            // alert('아이디와 비밀번호를 입력해주세요')
+
+            return
+        }
+        try {
+            const response = await fetch('http://localhost:8080/ssadang/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: inputId,
+                    password: inputPassword,
+                }),
+            })
+            if (response.ok) {
+                const data = await response.json()
+                // console.log('Success:', data.data)
+                localStorage.setItem('accessToken', data.data.accessToken)
+                // console.log('Success:', localStorage.getItem('accessToken'))
+                // router.push('/chat')
+            } else {
+                setError(true)
+            }
+        } catch (error) {
+            console.error('Error:', error)
+        }
     }
 
     return (
@@ -52,7 +82,7 @@ export default function LoginForm({ loginError, id, pw }: { loginError: boolean;
                         </div>
                     </div>
                 </div>
-                {loginError == true && (
+                {error == true && (
                     <p className="text-[15px] text-hobbing-red font-bold text-center">
                         ** 아이디/비밀번호를 다시 입력해주세요 **
                     </p>
